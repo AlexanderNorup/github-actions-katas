@@ -17,7 +17,7 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   build:
-    name: "Build the app"
+    name: "Build & Test the app"
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     container: gradle:6-jdk11 # The app in this repo is super old, so we need gradle 6
@@ -29,6 +29,32 @@ jobs:
 
       # Build the app
       - run: ci/build-app.sh
+        name: Build the app
 
       # Test the app
       - run: ci/unit-test-app.sh
+        name: Test the app
+
+      # Upload code again (for demonstration purposes, it dosn't really make sense) 
+      - uses: actions/upload-artifact@v4
+        with: 
+          name: code
+          path: .
+    
+  linting:
+    name: "Run super linter"
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - uses: actions/download-artifact@v4
+        name: "Download code"
+        with:
+          name: code
+          path: .
+      - name: Run linting
+        uses: super-linter/super-linter/slim@v5 
+        env:
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
