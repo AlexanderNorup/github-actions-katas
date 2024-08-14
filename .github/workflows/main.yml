@@ -59,6 +59,7 @@ jobs:
           DISABLE_ERRORS: true
 
   docker-image:
+    name: "Build and push docker image"
     runs-on: ubuntu-latest
     needs: [build]
     permissions:
