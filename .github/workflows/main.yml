@@ -85,4 +85,37 @@ jobs:
           push: true
           tags: ghcr.io/alexandernorup/micronaut-app:1.0-${{ github.sha }},ghcr.io/alexandernorup/micronaut-app:latest
   
+  performance-test:
+    name: "Performance test"
+    runs-on: ubuntu-latest
+    needs: [docker-image]
+    permissions:
+      packages: read
+    steps:
+    - name: Download code
+      uses: actions/download-artifact@v4
+      with:
+        name: code
+        path: .
+
+    - name: Execute performance test
+      run: bash ci/performance-test.sh
+
+  component-test:
+    name: "Component test"
+    runs-on: ubuntu-latest
+    needs: [docker-image]
+    permissions:
+      packages: read
+    steps:
+    - name: Download code
+      uses: actions/download-artifact@v4
+      with:
+        name: code
+        path: .
+        
+    - name: Execute component test
+      run: bash ci/component-test.sh
+  
+
 
