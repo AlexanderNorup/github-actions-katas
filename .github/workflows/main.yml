@@ -29,3 +29,6 @@ jobs:
 
       # Build the app
       - run: ci/build-app.sh
+
+      # Test the app
+      - run: ci/unit-test-app.sh
